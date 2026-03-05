@@ -4,31 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resilience Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1>Resilience Dashboard</h1>
+        <p>Your resource to manage and build resilience.</p>
     </header>
-    <main>
-        <section id="overview">
-            <h2>Overview</h2>
-            <p>This dashboard provides insights into resilience metrics.</p>
-        </section>
-        <section id="data-charts">
-            <h2>Data Charts</h2>
-            <!-- Add chart elements here -->
-        </section>
-        <section id="resources">
-            <h2>Resources</h2>
-            <ul>
-                <li><a href="#">Resource 1</a></li>
-                <li><a href="#">Resource 2</a></li>
-            </ul>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2026 Resilience Dashboard</p>
-    </footer>
+    <section id="root-causes">
+        <h2>Root Causes</h2>
+        <canvas id="radar-chart"></canvas>
+    </section>
+    <section id="daily-handles">
+        <h2>Daily Handles</h2>
+        <p>Manage your daily resilience practices.</p>
+    </section>
+    <section id="tips">
+        <h2>50 Tips for Resilience</h2>
+        <canvas id="doughnut-chart"></canvas>
+        <ul>
+            <li>Tip 1: Stay connected with others.</li>
+            <li>Tip 2: Practice mindfulness.</li>
+            <li>Tip 3: Stay physically active.</li>
+            <li>Tip 4: Learn problem-solving skills.</li>
+            <li>Tip 5: Accept that change is part of life.</li>
+            <!-- Add more tips as necessary -->
+        </ul>
+    </section>
+    <section id="filtering">
+        <h2>Filter Tips</h2>
+        <input type="text" id="filter-input" placeholder="Type to filter tips...">
+    </section>
+    <script>
+        const radarCtx = document.getElementById('radar-chart').getContext('2d');
+        const radarChart = new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Anxiety', 'Stress', 'Fatigue', 'Motivation', 'Support'],
+                datasets: [{
+                    label: 'Root Causes',
+                    data: [65, 59, 90, 81, 56],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {}
+        });
+
+        const doughnutCtx = document.getElementById('doughnut-chart').getContext('2d');
+        const doughnutChart = new Chart(doughnutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Tip 1', 'Tip 2', 'Tip 3', 'Tip 4', 'Tip 5'],
+                datasets: [{
+                    data: [12, 19, 3, 5, 2],
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                }]
+            },
+            options: {}
+        });
+
+        document.getElementById('filter-input').addEventListener('input', function() {
+            const filterValue = this.value.toLowerCase();
+            const tips = document.querySelectorAll('#tips ul li');
+            tips.forEach(tip => {
+                if (tip.textContent.toLowerCase().includes(filterValue)) {
+                    tip.style.display = 'list-item';
+                } else {
+                    tip.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
