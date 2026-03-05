@@ -1,0 +1,590 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Resilience Dashboard: Stop Letting Everything Affect You&lt;/title&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Chosen Palette: Muted Sage, Warm Stone, and Deep Slate for a calming, grounded experience --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Application Structure Plan: A single-page, progressive disclosure dashboard.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">         </span>1. Hero/Intro: Establishes the core problem (overwhelm) and sets a calming tone.</p>
+<p class="p1"><span class="Apple-converted-space">         </span>2. Root Causes (Genetic &amp; Psychological): Uses a side-by-side interactive list and a Radar chart to help users understand *why* they react, fostering self-compassion.</p>
+<p class="p1"><span class="Apple-converted-space">         </span>3. Daily Focus (20 Must-Dos): A functional, interactive grid of daily habits serving as an anchor.</p>
+<p class="p1"><span class="Apple-converted-space">         </span>4. 50 Resilience Tips: A filterable, interactive database of strategies. A Doughnut chart provides a visual breakdown of tip categories.</p>
+<p class="p1"><span class="Apple-converted-space">         </span>This structure moves the user from *Understanding* (Causes) to *Foundation* (Daily Dos) to *Action* (50 Tips). --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Visualization &amp; Content Choices:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">         </span>- Radar Chart (Chart.js): Compares Genetic vs Psych traits. Goal: Visualize the complex web of reactivity.</p>
+<p class="p1"><span class="Apple-converted-space">         </span>- Doughnut Chart (Chart.js): Shows the distribution of the 50 tips by category (Mindset, Social, Action). Goal: Inform users on where to focus their efforts.</p>
+<p class="p1"><span class="Apple-converted-space">         </span>- Interactive Grids &amp; Filters (Vanilla JS + HTML/CSS): For the 20 handles and 50 tips. Goal: Make large lists explorable and less overwhelming.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">         </span>- NO SVG/Mermaid used. --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>tailwind.config = {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>theme: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>extend: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>colors: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 800: '#292524', 900: '#1c1917' },</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>sage: { 100: '#e3e8e1', 500: '#7a907c', 700: '#4a5d4c' },</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>sand: { 100: '#f3eadd', 500: '#c2a886' }</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>fontFamily: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>sans: ['Inter', 'system-ui', 'sans-serif'],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>serif: ['Merriweather', 'Georgia', 'serif'],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #fafaf9; /* stone-50 */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #292524; /* stone-800 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Required Chart Container Styling */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.chart-container {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>max-width: 600px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin-left: auto;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin-right: auto;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: 350px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>max-height: 400px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>@media (min-width: 768px) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.chart-container {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>height: 400px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tip-card {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.3s ease;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tip-card:hover {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: translateY(-4px);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Custom Scrollbar for lists */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.custom-scroll::-webkit-scrollbar {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.custom-scroll::-webkit-scrollbar-track {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: #f5f5f4;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.custom-scroll::-webkit-scrollbar-thumb {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: #c2a886;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="antialiased font-sans"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Navigation --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;nav class="sticky top-0 z-50 bg-stone-50/90 backdrop-blur-md border-b border-stone-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex justify-between h-16"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="text-2xl mr-2 text-sage-700"&gt;&amp;#10052;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="font-serif font-bold text-xl tracking-tight text-stone-900"&gt;Resilience Space&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="hidden md:flex space-x-8 items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;a href="#causes" class="text-stone-600 hover:text-sage-700 font-medium transition-colors"&gt;The Roots&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;a href="#daily" class="text-stone-600 hover:text-sage-700 font-medium transition-colors"&gt;Daily Handles&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;a href="#tips" class="bg-sage-700 text-white px-4 py-2 rounded-lg hover:bg-sage-800 transition-colors"&gt;50 Tips&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/nav&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Hero Section --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;header class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1 class="text-4xl md:text-6xl font-serif font-bold text-stone-900 mb-6 leading-tight"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Stop Letting &lt;span class="text-sage-700 underline decoration-sand-500 decoration-4 underline-offset-8"&gt;Everything&lt;/span&gt; Affect You</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="text-lg md:text-xl text-stone-600 mb-10 max-w-3xl mx-auto leading-relaxed"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Emotional chaos and overthinking aren't just character flaws; they are the result of complex genetic wiring, deep-seated psychological conditioning, and the overwhelming noise of modern life. Explore this dashboard to understand your triggers, establish daily boundaries, and arm yourself with 50 actionable strategies for inner peace.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;a href="#causes" class="inline-flex items-center text-lg font-semibold text-sage-700 hover:text-sage-800 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Explore the Data &lt;span class="ml-2 text-xl"&gt;&amp;#8595;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Section 1: The Root Causes --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;section id="causes" class="py-16 bg-white border-y border-stone-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="mb-12 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-serif font-bold text-stone-900 mb-4"&gt;The Roots of Reactivity&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-stone-600 max-w-2xl mx-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Why do things hit us so hard? It's a combination of biology and biography. Here are 20 Genetic and 20 Psychological factors that lower our threshold for emotional overwhelm. Understanding these is the first step to detaching from them.</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start"&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Lists Container --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-[600px]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Genetic List --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-stone-50 rounded-xl p-6 border border-stone-200 shadow-sm flex flex-col h-full"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center mb-4 pb-4 border-b border-stone-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-2xl mr-3 text-sage-700"&gt;&amp;#9874;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h3 class="text-xl font-bold text-stone-900"&gt;20 Genetic Factors&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;ul id="genetic-list" class="space-y-3 overflow-y-auto custom-scroll pr-2 flex-grow text-stone-700 text-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;!-- Populated by JS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Psychological List --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-stone-50 rounded-xl p-6 border border-stone-200 shadow-sm flex flex-col h-full"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center mb-4 pb-4 border-b border-stone-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-2xl mr-3 text-sand-500"&gt;&amp;#9729;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h3 class="text-xl font-bold text-stone-900"&gt;20 Psych Factors&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;ul id="psych-list" class="space-y-3 overflow-y-auto custom-scroll pr-2 flex-grow text-stone-700 text-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;!-- Populated by JS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Chart Container --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-stone-50 rounded-xl p-6 border border-stone-200 shadow-sm h-[600px] flex flex-col justify-center items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-stone-900 mb-2 text-center"&gt;The Sensitivity Spectrum&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-sm text-stone-500 mb-6 text-center"&gt;How nature and nurture combine to amplify our reactions across different life domains.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="chart-container w-full"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;canvas id="radarChart"&gt;&lt;/canvas&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-xs text-stone-400 mt-4 text-center"&gt;*Conceptual data illustrating the intersection of biological predisposition and psychological conditioning.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Section 2: Daily Handles --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;section id="daily" class="py-20 bg-stone-100"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="mb-12"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-serif font-bold text-stone-900 mb-4"&gt;20 Daily Must-Dos &amp; Handles&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-stone-600 max-w-3xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>To build an invisible shield against the chaos of social, communication, and work environments, you need anchors. These 20 daily practices are non-negotiable handles to keep you grounded. Click to mark them as integrated into your routine.</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="handles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Populated by JS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="mt-8 bg-sage-100 rounded-lg p-6 border border-sage-500/20 flex items-start"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-3xl mr-4 text-sage-700"&gt;&amp;#9888;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 class="font-bold text-sage-900"&gt;Why Focus on Daily Handles?&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-sage-800 mt-1 text-sm"&gt;Resilience isn't built in a single moment of crisis; it's forged in the quiet repetition of daily habits. By controlling these 20 aspects of your day, you drastically reduce the surface area for external chaos to attach to you.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Section 3: 50 Tips to Stop Letting Things Affect You --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;section id="tips" class="py-20 bg-white"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="max-w-2xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-3xl font-serif font-bold text-stone-900 mb-4"&gt;50 Tips to Detach &amp; Protect Your Peace&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-stone-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>A comprehensive database of mindset shifts, behavioral tactics, and emotional boundaries to break free from self-sabotage and the opinions of others. Filter by category to find exactly what you need right now.</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Filter Controls --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex flex-wrap gap-2" id="filter-controls"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="filter-btn active bg-stone-800 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors" data-filter="all"&gt;All 50 Tips&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="filter-btn bg-stone-200 text-stone-700 hover:bg-stone-300 px-4 py-2 rounded-full text-sm font-medium transition-colors" data-filter="Mindset"&gt;Mindset&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="filter-btn bg-stone-200 text-stone-700 hover:bg-stone-300 px-4 py-2 rounded-full text-sm font-medium transition-colors" data-filter="Action"&gt;Action&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="filter-btn bg-stone-200 text-stone-700 hover:bg-stone-300 px-4 py-2 rounded-full text-sm font-medium transition-colors" data-filter="Social"&gt;Social&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Doughnut Chart for Tip Breakdown --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-stone-50 rounded-xl p-6 border border-stone-200 shadow-sm flex flex-col justify-center lg:col-span-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-lg font-bold text-stone-900 mb-4 text-center"&gt;Strategy Distribution&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="chart-container" style="height: 250px; max-height: 250px;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;canvas id="doughnutChart"&gt;&lt;/canvas&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Tips Grid --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="lg:col-span-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div id="tips-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[600px] overflow-y-auto custom-scroll pr-4 content-start"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;!-- Populated by JS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Footer --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;footer class="bg-stone-900 text-stone-400 py-12 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-3xl mx-auto px-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="text-3xl text-sage-500 mb-4 block"&gt;&amp;#10022;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="mb-4"&gt;"Every challenge is shaping you. Every joy is revealing you."&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="text-sm"&gt;Based on concepts of emotional resilience, boundaries, and psychological detachment.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/footer&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- JavaScript Data &amp; Logic --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- DATA STRUCTURES ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const geneticFactors = [</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Hyper-reactive Amygdala (Fear Center)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Short 5-HTTLPR Allele (Serotonin transport)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"High Sensory Processing Sensitivity (SPS trait)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Dopamine Receptor Variants (Reward seeking)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Naturally High Baseline Cortisol",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Low Vagal Tone (Slower nervous system reset)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Epigenetic Trauma Inheritance",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Variations in Neuroplasticity Rates",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Oxytocin Receptor Gene Variations (Bonding)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Overactive Sympathetic Nervous System",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"COMT Gene Met/Met Variant (Warrior vs Worrier)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Lower Baseline BDNF (Brain adaptability)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Extreme Sleep Chronotypes (Circadian mismatch)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Genetic Baseline for Introversion",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Highly Sensitive HPA Axis (Stress response)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Exaggerated Acoustic Startle Response",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Rapid Emotional Memory Consolidation",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"High Baseline Systemic Inflammation",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Altered Prefrontal Cortex Connectivity",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Gut Microbiome Predispositions (Gut-Brain axis)"</p>
+<p class="p1"><span class="Apple-converted-space">        </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const psychFactors = [</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Unresolved Childhood Trauma",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Anxious or Avoidant Attachment Styles",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Severe Negativity Bias",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Learned Helplessness Conditioning",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Maladaptive Perfectionism",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Chronically Low Self-Esteem",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Imposter Syndrome",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Cognitive Fusion (Over-identifying with thoughts)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Deep-Seated Fear of Rejection/Abandonment",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Inability to Set Boundaries",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Trauma-induced Hyper-vigilance",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Emotional Reasoning (Feelings = Facts)",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Habitual Catastrophizing",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"All-or-Nothing (Binary) Thinking",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Excessive Need for External Control",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Lack of Emotional Regulation Skills",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Chronic Empathy Fatigue",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Unprocessed Grief or Loss",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Core Beliefs of Inadequacy ('I am not enough')",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"Psychological Projection of Insecurities"</p>
+<p class="p1"><span class="Apple-converted-space">        </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const dailyHandles = [</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 1, text: "15-Minute Morning Mindfulness", desc: "Before checking your phone, sit in silence to set your baseline." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 2, text: "Hard Work-Life Boundaries", desc: "Log off physically and mentally at a specific time daily." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 3, text: "Practice Active Listening", desc: "Listen to understand, not to formulate your reply." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 4, text: "Time-Block Deep Work", desc: "Protect 90 minutes daily for uninterrupted focus." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 5, text: "Daily Physical Discharge", desc: "Exercise to flush cortisol and adrenaline from the body." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 6, text: "The '3 Good Things' Journal", desc: "Rewire negativity bias before bed." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 7, text: "Social Media Time Limits", desc: "Cap endless scrolling to prevent comparison fatigue." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 8, text: "Prioritize 8 Hours Sleep", desc: "Non-negotiable neurological repair time." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 9, text: "The Habit of 'No'", desc: "Say no to at least one non-essential request daily." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 10, text: "Engage in an Analog Hobby", desc: "Do something physical that doesn't involve a screen." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 11, text: "Schedule 'Do Nothing' Time", desc: "White space in your calendar for mental digestion." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 12, text: "Connect with Your Anchor Circle", desc: "Brief, meaningful contact with safe people." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 13, text: "20 Minutes Outside", desc: "Regulate your circadian rhythm with natural light." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 14, text: "Use 'I Feel' Statements", desc: "Own your emotions in communication without blaming." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 15, text: "Daily Financial Check", desc: "5 minutes to review spending—removes background anxiety." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 16, text: "Read 10 Pages", desc: "Consume intentional information, not algorithmic feeds." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 17, text: "Reset Your Space", desc: "Clean your immediate environment for 10 minutes." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 18, text: "Hydration Checkpoints", desc: "Drink water before reacting to emotional stimuli." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 19, text: "The Daily Top 3", desc: "Identify only 3 non-negotiable tasks for the day." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ id: 20, text: "End-of-Day Self-Compassion", desc: "Forgive yourself for what you didn't finish today." }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const fiftyTips = [</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Recognize that other people's opinions are a reflection of them, not you." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Implement the 90-second rule: Allow an emotion to wash over you for 90 seconds without reacting." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Ask yourself: 'Will this matter in 5 years?' If not, don't spend more than 5 minutes agonizing over it." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Mute, unfollow, or block accounts that consistently make you feel inadequate." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "When overwhelmed, focus on your 5 senses to bring your brain back to the present moment." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Stop expecting people to act the way you would act." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "You do not owe anyone an immediate response to a text or email." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Accept that you cannot control the wind, only how you adjust your sails." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Write down your intrusive thoughts, then literally throw the paper away." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Set 'Do Not Disturb' on your phone an hour before bed." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Replace 'Why is this happening to me?' with 'What is this teaching me?'" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Take a cold shower or splash cold water on your face to trigger the mammalian dive reflex and calm your heart rate." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Stop over-explaining your boundaries. 'No, thank you' is a complete sentence." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Your worth is not tied to your productivity." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Breathe in for 4 seconds, hold for 7, exhale for 8 (4-7-8 breathing)." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Assume positive intent until proven otherwise." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Differentiate between 'venting' (healthy) and 'dumping' (toxic) in friendships." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Do a brain dump: Write everything on your mind without filtering." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Perfectionism is just procrastination disguised as high standards." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "If someone is committed to misunderstanding you, stop trying to explain yourself." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "You are the sky. Everything else—it’s just the weather." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Take a brisk 10-minute walk without your phone." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Limit your time with 'energy vampires'—people who leave you exhausted." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Worrying means you suffer twice." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Create a 'Ta-Da' list instead of a 'To-Do' list at the end of a hard day." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Forgiveness is for you, not for them. It cuts the energetic cord." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Don't take criticism from someone you wouldn't go to for advice." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Physically step back when triggered during a conversation." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Emotions are data, not directives." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Declutter one small surface (like a desk) to regain a sense of control." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Let go of the timeline you thought your life should follow." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Practice saying 'Let me get back to you on that' instead of an immediate 'Yes'." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Tense every muscle in your body for 5 seconds, then release completely." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "You don't have to attend every argument you are invited to." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Identify your triggers in meetings and mentally prepare a neutral response." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Stop trying to be the hero in everyone else's story." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Drink a large glass of water; dehydration mimics anxiety." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Grief is just love with nowhere to go. Let yourself feel it." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Keep conversations with toxic coworkers strictly professional and brief." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Do one task you've been avoiding for exactly 5 minutes." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "Comfort zones are beautiful, but nothing grows there." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Stop comparing your behind-the-scenes with everyone else's highlight reel." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Change your physical environment when you feel stuck in a thought loop." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "You survived 100% of your bad days so far." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Don't make assumptions based on text messages. Tone is lost in text." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Listen to bilateral music (sounds alternating between ears) to soothe the nervous system." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "A thought is just a neurological event, not a truth." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Social", text: "Celebrate others' successes; there is enough pie for everyone." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Action", text: "Take one day a week completely off social media." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ cat: "Mindset", text: "You can't pour from an empty cup. Self-care is a responsibility." }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- DOM MANIPULATION ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('DOMContentLoaded', () =&gt; {</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// 1. Render Genetic &amp; Psych Lists</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const renderList = (dataArray, containerId, iconColor) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const container = document.getElementById(containerId);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dataArray.forEach((item, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const li = document.createElement('li');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>li.className = "flex items-start group";</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>li.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="mr-2 text-${iconColor} font-bold opacity-50 group-hover:opacity-100 transition-opacity"&gt;${index + 1}.&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;${item}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>container.appendChild(li);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderList(geneticFactors, 'genetic-list', 'sage-600');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderList(psychFactors, 'psych-list', 'sand-500');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// 2. Render Daily Handles</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const handlesGrid = document.getElementById('handles-grid');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>dailyHandles.forEach(handle =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const div = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>div.className = "bg-white p-5 rounded-xl border border-stone-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer tip-card group relative overflow-hidden";</p>
+<p class="p1"><span class="Apple-converted-space">                </span>div.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-start mb-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-sm font-bold text-sage-600"&gt;Handle ${handle.id}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="w-5 h-5 rounded border-2 border-stone-300 flex items-center justify-center group-hover:border-sage-500 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-sage-600 opacity-0 group-hover:opacity-100 transition-opacity"&gt;&amp;#10003;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 class="font-bold text-stone-900 mb-1 leading-tight"&gt;${handle.text}&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-xs text-stone-500"&gt;${handle.desc}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="absolute bottom-0 left-0 h-1 bg-sage-500 w-0 group-hover:w-full transition-all duration-300"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>`;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Toggle checkmark on click</p>
+<p class="p1"><span class="Apple-converted-space">                </span>div.addEventListener('click', function() {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const check = this.querySelector('span.text-sage-600');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const box = this.querySelector('div.border-stone-300');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (check.classList.contains('opacity-0')) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>check.classList.remove('opacity-0', 'group-hover:opacity-100');</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>box.classList.replace('border-stone-300', 'border-sage-500');</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>box.classList.add('bg-sage-50');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>check.classList.add('opacity-0', 'group-hover:opacity-100');</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>box.classList.replace('border-sage-500', 'border-stone-300');</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>box.classList.remove('bg-sage-50');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>handlesGrid.appendChild(div);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// 3. Render 50 Tips</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const tipsContainer = document.getElementById('tips-container');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const renderTips = (filterCat) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>tipsContainer.innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const filtered = filterCat === 'all' ? fiftyTips : fiftyTips.filter(t =&gt; t.cat === filterCat);</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>filtered.forEach((tip, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>let catColor = tip.cat === 'Mindset' ? 'bg-sand-100 text-sand-800' :<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                                   </span>tip.cat === 'Action' ? 'bg-sage-100 text-sage-800' :<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                                   </span>'bg-stone-200 text-stone-800';</p>
+<p class="p2"><span class="Apple-converted-space">                    </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const div = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>div.className = "bg-stone-50 p-5 rounded-xl border border-stone-200 tip-card flex flex-col justify-between";</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>div.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-stone-800 text-sm font-medium mb-4 leading-relaxed"&gt;"${tip.text}"&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex justify-between items-center mt-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-xs font-bold px-2 py-1 rounded ${catColor}"&gt;${tip.cat}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-stone-300 text-xs font-serif"&gt;Tip #${fiftyTips.indexOf(tip) + 1}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>tipsContainer.appendChild(div);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderTips('all'); // Initial render</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Filter Logic</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const filterBtns = document.querySelectorAll('.filter-btn');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>filterBtns.forEach(btn =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>btn.addEventListener('click', (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>// Update active button styling</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>filterBtns.forEach(b =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>b.classList.remove('bg-stone-800', 'text-white');</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>b.classList.add('bg-stone-200', 'text-stone-700');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>e.target.classList.remove('bg-stone-200', 'text-stone-700');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>e.target.classList.add('bg-stone-800', 'text-white');</p>
+<p class="p2"><span class="Apple-converted-space">                    </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>// Render specific tips</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>renderTips(e.target.getAttribute('data-filter'));</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// --- CHART.JS VISUALIZATIONS ---</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Shared styling options</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Chart.defaults.font.family = "'Inter', 'system-ui', 'sans-serif'";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Chart.defaults.color = '#78716c'; // stone-500</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// 1. Radar Chart (Genetic vs Psych Influence)</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const radarCtx = document.getElementById('radarChart').getContext('2d');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>new Chart(radarCtx, {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: 'radar',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>data: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>labels: ['Stress Response', 'Empathy/Sponging', 'Overthinking', 'Need for Approval', 'Boundary Setting', 'Sensory Overload'],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>datasets: [{</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>label: 'Genetic/Biological Predisposition',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>data: [85, 60, 40, 30, 20, 90],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: 'rgba(122, 144, 124, 0.2)', // sage-500 with opacity</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>borderColor: '#7a907c',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>pointBackgroundColor: '#7a907c',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>pointHoverBorderColor: '#fff'</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}, {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>label: 'Psychological Conditioning',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>data: [70, 85, 95, 90, 80, 50],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: 'rgba(194, 168, 134, 0.2)', // sand-500 with opacity</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>borderColor: '#c2a886',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>pointBackgroundColor: '#c2a886',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>pointHoverBorderColor: '#fff'</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}]</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>responsive: true,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>maintainAspectRatio: false,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scales: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>r: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>angleLines: { color: '#e7e5e4' }, // stone-200</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>grid: { color: '#e7e5e4' },</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>pointLabels: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>font: { size: 11, weight: '600' },</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>color: '#292524' // stone-800</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>ticks: { display: false, max: 100, min: 0 }</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>plugins: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>legend: { position: 'bottom', labels: { boxWidth: 12 } },</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>tooltip: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>backgroundColor: 'rgba(28, 25, 23, 0.9)', // stone-900</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>padding: 12,</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>cornerRadius: 8</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// 2. Doughnut Chart (Tip Distribution)</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Calculate distribution</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let mindsetCount = fiftyTips.filter(t =&gt; t.cat === 'Mindset').length;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let actionCount = fiftyTips.filter(t =&gt; t.cat === 'Action').length;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let socialCount = fiftyTips.filter(t =&gt; t.cat === 'Social').length;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>new Chart(doughnutCtx, {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: 'doughnut',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>data: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>labels: ['Mindset Shifts', 'Actionable Steps', 'Social Boundaries'],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>datasets: [{</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>data: [mindsetCount, actionCount, socialCount],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: [</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>'#c2a886', // sand-500</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>'#7a907c', // sage-500</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>'#a8a29e'<span class="Apple-converted-space">  </span>// stone-400</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>borderWidth: 0,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>hoverOffset: 4</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}]</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>responsive: true,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>maintainAspectRatio: false,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>cutout: '70%',</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>plugins: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>legend: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>position: 'bottom',</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>labels: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>padding: 20,</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>boxWidth: 12,</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>font: { size: 12 }</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>tooltip: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>backgroundColor: 'rgba(28, 25, 23, 0.9)',</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>padding: 12,</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>callbacks: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>label: function(context) {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>return ` ${context.label}: ${context.raw} Tips`;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
